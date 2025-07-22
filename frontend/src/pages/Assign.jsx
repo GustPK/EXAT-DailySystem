@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Assign = () => {
     const [date, setDate] = useState('');
@@ -59,7 +61,7 @@ const Assign = () => {
 
         // ตรวจสอบว่าข้อมูลครบถ้วนหรือไม่
         if (!date || !timeStart || !timeEnd || !jobDetail || !location || !action) {
-            alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+            toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
             setLoading(false);
             return;
         }
@@ -90,7 +92,7 @@ const Assign = () => {
 
             const result = await response.json();
             if (result.success) {
-                alert('✅ บันทึกข้อมูลสำเร็จ');
+                toast.success('บันทึกข้อมูลสำเร็จ');
                 // รีเซ็ตฟอร์มหลังจากบันทึกข้อมูล
                 setDate('');
                 setTimeStart('');
@@ -103,11 +105,11 @@ const Assign = () => {
                 setProblem('');
                 navigate(-1);
             } else {
-                alert('เกิดข้อผิดพลาด: ' + result.message);
+                toast.error('เกิดข้อผิดพลาด: ' + result.message);
             }
         } catch (err) {
             console.error('Submit error:', err);
-            alert('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
+            toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
         }
 
         setLoading(false);

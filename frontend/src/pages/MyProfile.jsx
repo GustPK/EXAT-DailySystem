@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SquarePen } from 'lucide-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyProfile = () => {
   const [editField, setEditField] = useState(null);
@@ -104,16 +106,16 @@ const MyProfile = () => {
 
       const result = await res.json();
       if (result.success) {
-        alert("✅ ข้อมูลถูกบันทึกเรียบร้อยแล้ว");
+        toast.success("ข้อมูลถูกบันทึกเรียบร้อยแล้ว");
         setOriginalFields(fields);
         setIsModified(false);
         setEditField(null);
       } else {
-        alert("❌ บันทึกไม่สำเร็จ: " + result.message);
+        toast.error("บันทึกไม่สำเร็จ: " + result.message);
       }
     } catch (error) {
       console.error("Update error:", error);
-      alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
+      toast.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์");
     }
   };
 

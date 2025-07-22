@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditWorklog = () => {
     const navigate = useNavigate();
@@ -60,12 +62,21 @@ const EditWorklog = () => {
 
         const safe = (value) => (value && value.trim() !== "" ? value : "-----");
 
+        // Ensure TIME_START and TIME_END are sent as 'HH:mm' only
+        const getTimeHHmm = (datetimeStr) => {
+            if (!datetimeStr) return '';
+            // If already in HH:mm, return as is
+            if (/^\d{2}:\d{2}$/.test(datetimeStr)) return datetimeStr;
+            // If ISO or datetime, extract HH:mm
+            return datetimeStr.slice(11, 16);
+        };
+
         const payload = {
             WORKLOG_ID: worklog?.WORKLOG_ID,
             USER_ID: worklog?.USER_ID || '',
             WORK_DATE: worklog?.WORK_DATE,
-            TIME_START: worklog?.TIME_START,
-            TIME_END: worklog?.TIME_END,
+            TIME_START: getTimeHHmm(worklog?.TIME_START),
+            TIME_END: getTimeHHmm(worklog?.TIME_END),
             TASK_DETAIL: safe(worklog?.TASK_DETAIL),
             LOCATION_ID: safe(worklog?.LOCATION_ID),
             JOB_CODE: safe(worklog?.JOB_CODE),
@@ -87,14 +98,14 @@ const EditWorklog = () => {
 
             const result = await response.json();
             if (result.success) {
-                alert('✅ แก้ไขข้อมูลสำเร็จ');
+                toast.success('แก้ไขข้อมูลสำเร็จ');
                 navigate(-2);
             } else {
-                alert('เกิดข้อผิดพลาด: ' + result.message);
+                toast.error('เกิดข้อผิดพลาด: ' + result.message);
             }
         } catch (err) {
             console.error('Submit error:', err);
-            alert('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
+            toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
         }
 
         setLoading(false);

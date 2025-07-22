@@ -18,7 +18,7 @@ const generateTimeSlots = () => {
 
 const TIME_SLOTS = generateTimeSlots(); // 10-minute intervals
 
-// 🔧 ปัดเวลา
+// ปัดเวลา
 const roundDownToSlot = (timeStr) => {
     const [hour, minute] = timeStr.split(':').map(Number);
     const roundedMinute = Math.floor(minute / 10) * 10;
@@ -103,7 +103,7 @@ const WorklogCalendar = () => {
 
     return (
         <div className="overflow-x-auto max-w-7xl mx-auto p-6 mb-30">
-            <h2 className="text-xl font-bold mb-4 text-blue-900 text-center">ตารางงาน</h2>
+            <h2 className="text-2xl font-bold mb-6 text-blue-900 text-center">ตารางงาน</h2>
             <table className="w-full border-t border-b border-blue-900 text-sm">
                 <thead>
                     <tr className="bg-blue-50 text-blue-900">

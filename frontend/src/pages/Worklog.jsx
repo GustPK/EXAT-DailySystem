@@ -96,11 +96,11 @@ const Worklog = () => {
         const reportUrl = `http://localhost:8080/Reporting/genreport?Refcode=${refcode}`;
         window.open(reportUrl, '_blank');
       } else {
-        alert('ไม่สามารถสร้างรายงานได้: ' + res.data.message);
+        toast.error('ไม่สามารถสร้างรายงานได้: ' + res.data.message);
       }
     } catch (error) {
       console.error('Report creation failed:', error);
-      alert('เกิดข้อผิดพลาดขณะสร้างรายงาน');
+      toast.error('เกิดข้อผิดพลาดขณะสร้างรายงาน');
     }
   };
 

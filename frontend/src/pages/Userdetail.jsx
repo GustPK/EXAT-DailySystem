@@ -2,6 +2,8 @@ import { CircleChevronRight, FileTextIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Userdetail = () => {
   const { state } = useLocation();
@@ -99,11 +101,11 @@ const Userdetail = () => {
         const reportUrl = `http://localhost:8080/Reporting/genreport?Refcode=${refcode}`;
         window.open(reportUrl, '_blank');
       } else {
-        alert('ไม่สามารถสร้างรายงานได้: ' + res.data.message);
+        toast.error('ไม่สามารถสร้างรายงานได้: ' + res.data.message);
       }
     } catch (error) {
       console.error('Report creation failed:', error);
-      alert('เกิดข้อผิดพลาดขณะสร้างรายงาน');
+      toast.error('เกิดข้อผิดพลาดขณะสร้างรายงาน');
     }
   };
 

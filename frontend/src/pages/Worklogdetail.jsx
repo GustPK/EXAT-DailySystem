@@ -1,5 +1,7 @@
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const WorklogDetail = () => {
   const { worklogId } = useParams();
@@ -46,13 +48,13 @@ const WorklogDetail = () => {
       });
       const result = await res.json();
       if (result.success) {
-        alert('ลบงานสำเร็จ');
+        toast.success('ลบงานสำเร็จ');
         navigate(-1);
       } else {
-        alert('ลบงานไม่สำเร็จ');
+        toast.error('ลบงานไม่สำเร็จ');
       }
     } catch (err) {
-      alert('เกิดข้อผิดพลาดในการลบงาน');
+      toast.error('เกิดข้อผิดพลาดในการลบงาน');
     }
   };
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +27,7 @@ const SignUp = () => {
       if (res.data.success) {
         setDepartmentList(res.data.data);
       } else {
-        alert("ไม่สามารถโหลดรายชื่อแผนกได้");
+        toast.error("ไม่สามารถโหลดรายชื่อแผนกได้");
       }
     })
     .catch((err) => {
@@ -44,12 +46,12 @@ const SignUp = () => {
     event.preventDefault();
 
     if (formData.PASSWORD !== formData.CONFIRM_PASSWORD) {
-      alert('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน');
+      toast.error('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน');
       return;
     }
 
     if (!formData.DEPARTMENT_ID) {
-      alert('กรุณาเลือกแผนก');
+      toast.error('กรุณาเลือกแผนก');
       return;
     }
 
@@ -66,11 +68,11 @@ const SignUp = () => {
 
     try {
       const response = await axios.post('http://localhost:4000/v1/user/signup', dataToSend);
-      alert('สมัครสมาชิกสำเร็จ');
+      toast.success('สมัครสมาชิกสำเร็จ');
       navigate('/login');
     } catch (error) {
       console.error(error);
-      alert('เกิดข้อผิดพลาดในการสมัครสมาชิก');
+      toast.error('เกิดข้อผิดพลาดในการสมัครสมาชิก');
     }
   };
 

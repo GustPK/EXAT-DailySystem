@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const AddWorklog = () => {
   const [date, setDate] = useState('');
@@ -47,11 +50,13 @@ const AddWorklog = () => {
     e.preventDefault();
     setLoading(true);
 
+    // ส่ง TIME_START, TIME_END เป็น 'HH:mm' เท่านั้น (local time)
+    const getHHmm = (t) => t ? t.slice(0,5) : '';
     const payload = {
       USER_ID: user?.USER_ID || '',
       WORK_DATE: date,
-      TIME_START: timeStart,
-      TIME_END: timeEnd,
+      TIME_START: getHHmm(timeStart),
+      TIME_END: getHHmm(timeEnd),
       TASK_DETAIL: jobDetail,
       LOCATION_ID: location,
       JOB_CODE: jobNumber,
@@ -73,7 +78,7 @@ const AddWorklog = () => {
 
       const result = await response.json();
       if (result.success) {
-        alert('✅ บันทึกข้อมูลสำเร็จ');
+        toast.success('บันทึกข้อมูลสำเร็จ');
         setDate('');
         setTimeStart('');
         setTimeEnd('');
@@ -85,11 +90,11 @@ const AddWorklog = () => {
         setProblem('');
         navigate('/worklog');
       } else {
-        alert('เกิดข้อผิดพลาด: ' + result.message);
+        toast.error('เกิดข้อผิดพลาด: ' + result.message);
       }
     } catch (err) {
       console.error('Submit error:', err);
-      alert('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
+      toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
     }
 
     setLoading(false);

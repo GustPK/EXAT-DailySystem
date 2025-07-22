@@ -27,7 +27,14 @@ const PrivateRoute = ({ children }) => {
 const App = () => {
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnFocusLoss
+      />
       <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />

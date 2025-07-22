@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -31,11 +33,11 @@ const Login = () => {
         localStorage.setItem('token', response.data.token);
       }
 
-      alert('เข้าสู่ระบบสำเร็จ');
+      toast.success('เข้าสู่ระบบสำเร็จ');
       navigate('/');
     } catch (error) {
       console.error(error);
-      alert('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+      toast.error('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
     }
   };
 
