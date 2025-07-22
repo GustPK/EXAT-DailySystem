@@ -9,16 +9,26 @@ const EditWorklog = () => {
     const [locationList, setLocationList] = useState([]);
     const token = localStorage.getItem('token');
 
-    // ดึงข้อมูลจาก state ที่ส่งมาจาก WorklogDetail
+    const formatTime = (datetimeStr) => {
+        if (!datetimeStr) return '';
+        return datetimeStr.slice(11, 16); // แสดง HH:mm ไม่แปลง timezone
+    };
+
+    const updateTime = (timeType, timeStr) => {
+        if (!worklog?.WORK_DATE) return;
+        const datePart = worklog.WORK_DATE.slice(0, 10);
+        const newTime = `${datePart}T${timeStr}:00+07:00`; // ใส่ offset เวลาไทย
+        setWorklog({ ...worklog, [timeType]: newTime });
+    };
+
     useEffect(() => {
         if (location.state && location.state.worklog) {
             setWorklog(location.state.worklog);
         } else {
-            navigate('/worklog'); // ถ้าไม่มีข้อมูล worklog จะเปลี่ยนเส้นทางไปหน้า worklog
+            navigate('/worklog');
         }
     }, [location.state, navigate]);
 
-    // ดึงข้อมูลสถานที่จาก API
     useEffect(() => {
         const fetchLocations = async () => {
             try {
@@ -48,7 +58,6 @@ const EditWorklog = () => {
         e.preventDefault();
         setLoading(true);
 
-        // ฟังก์ชันเพื่อให้ค่าที่ไม่มีการกรอกจะเป็น null หรือ ""
         const safe = (value) => (value && value.trim() !== "" ? value : "-----");
 
         const payload = {
@@ -57,12 +66,12 @@ const EditWorklog = () => {
             WORK_DATE: worklog?.WORK_DATE,
             TIME_START: worklog?.TIME_START,
             TIME_END: worklog?.TIME_END,
-            TASK_DETAIL: safe(worklog?.TASK_DETAIL), // ใช้ฟังก์ชัน safe
+            TASK_DETAIL: safe(worklog?.TASK_DETAIL),
             LOCATION_ID: safe(worklog?.LOCATION_ID),
-            JOB_CODE: safe(worklog?.JOB_CODE), // ถ้าผู้ใช้ไม่กรอก จะเป็นค่า ""
-            COORDINATOR: safe(worklog?.COORDINATOR), // ถ้าผู้ใช้ไม่กรอก จะเป็นค่า ""
-            ACTION_TAKEN: safe(worklog?.ACTION_TAKEN), // ถ้าผู้ใช้ไม่กรอก จะเป็นค่า ""
-            PROBLEM: safe(worklog?.PROBLEM), // ถ้าผู้ใช้ไม่กรอก จะเป็นค่า ""
+            JOB_CODE: safe(worklog?.JOB_CODE),
+            COORDINATOR: safe(worklog?.COORDINATOR),
+            ACTION_TAKEN: safe(worklog?.ACTION_TAKEN),
+            PROBLEM: safe(worklog?.PROBLEM),
             CREATED_BY: worklog?.USER_ID || '',
         };
 
@@ -90,8 +99,6 @@ const EditWorklog = () => {
 
         setLoading(false);
     };
-
-
 
     if (!worklog) return <div>กำลังโหลดข้อมูล...</div>;
 
@@ -128,16 +135,16 @@ const EditWorklog = () => {
                                     <input
                                         type="time"
                                         className="p-2 border-2 border-gray-300 rounded-md bg-gray-100 w-28 max-w-xs focus:border-blue-500 focus:bg-white transition"
-                                        value={worklog.TIME_START?.slice(11, 16)}
-                                        onChange={(e) => setWorklog({ ...worklog, TIME_START: e.target.value })}
+                                        value={formatTime(worklog.TIME_START)}
+                                        onChange={(e) => updateTime('TIME_START', e.target.value)}
                                         required
                                     />
                                     <span className="flex items-center">-</span>
                                     <input
                                         type="time"
                                         className="p-2 border-2 border-gray-300 rounded-md bg-gray-100 w-28 max-w-xs focus:border-blue-500 focus:bg-white transition"
-                                        value={worklog.TIME_END?.slice(11, 16)}
-                                        onChange={(e) => setWorklog({ ...worklog, TIME_END: e.target.value })}
+                                        value={formatTime(worklog.TIME_END)}
+                                        onChange={(e) => updateTime('TIME_END', e.target.value)}
                                         required
                                     />
                                 </div>

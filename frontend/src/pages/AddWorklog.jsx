@@ -18,7 +18,6 @@ const AddWorklog = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const token = localStorage.getItem('token');
 
-  // ดึงข้อมูลสถานที่จาก API
   useEffect(() => {
     const fetchLocations = async () => {
       try {
