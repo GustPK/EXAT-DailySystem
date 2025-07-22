@@ -22,7 +22,7 @@ exports.doGetToken = function(user, pwd) {
                 verify:tokenEncode + fix   
             }
 
-            var token = jwt.sign(playload, key, {expiresIn:60*10})    
+            var token = jwt.sign(playload, key);  
             return new MessageModel(1, token) 
         }
         else{
@@ -43,7 +43,7 @@ exports.doValidateToken = function(token) {
 
         verify = verify.toString().replace(fix, '')
         const tokenDecrypt = base64url.decode(verify, 'utf8')
-                
+                  
         if(tmp == tokenDecrypt){
             return new MessageModel(1, 'Success')
         }

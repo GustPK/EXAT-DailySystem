@@ -1,10 +1,13 @@
 
 const express = require("express")
 const router = express.Router()
-
 const user = require("../controllers/user.controller")
+const authenBasic = require('../middlewares/authentication.middleware')
 
-router.post("/verify", user.verify)
-//router.post("/login", user.login)
+router.post("/v1/user/signup", user.signup)
+router.post("/v1/user/login", user.login);
+router.put("/v1/user/update", authenBasic, user.update);
+router.post("/v1/user/get", user.get)
+
 
 module.exports = router

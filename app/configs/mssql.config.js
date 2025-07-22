@@ -1,6 +1,6 @@
 module.exports = {
-    SERVER: "127.0.0.1\\SQL2019",
+    SERVER: "127.0.0.1\\SQLEXPRESS",
     USER: "sa",
-    PASSSWORD: "2019",
-    DATABASE: "EXATDB"
+    PASSSWORD: "1234",
+    DATABASE: "EXAT"
   };
