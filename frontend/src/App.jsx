@@ -33,7 +33,7 @@ const App = () => {
         hideProgressBar={false}
         newestOnTop
         closeOnClick
-        pauseOnFocusLoss
+        pauseOnHover={false}
       />
       <Navbar />
       <Routes>

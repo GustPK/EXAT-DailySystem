@@ -12,6 +12,7 @@ const Team = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const departmentId = user?.DEPARTMENT_ID;
   const role = user?.ROLE;
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     // ถ้าไม่ใช่ MANAGER หรือ ADMIN ให้ redirect กลับหน้าแรก
@@ -24,7 +25,12 @@ const Team = () => {
       try {
         const res = await axios.post(
           'http://localhost:4000/v1/user/get',
-          { DEPARTMENT_ID: departmentId }
+          { DEPARTMENT_ID: departmentId },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (res.data.success) {
           setTeam(res.data.data.filter(member => member.ROLE == "USER"));
@@ -75,7 +81,7 @@ const Team = () => {
         )}
       </div>
     </div>
-    
+
   );
 };
 
