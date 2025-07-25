@@ -195,55 +195,52 @@ const Userdetail = () => {
         ) : sortedDates.length === 0 ? (
           <div className="text-center text-gray-400">ไม่พบข้อมูลงาน</div>
         ) : (
-          sortedDates.map(date => (
-            <div key={date} className="border-2 border-gray-300 rounded-xl mb-3 overflow-hidden">
-              <button
-                className="w-full flex items-center justify-between px-6 py-4 bg-gradient-to-r from-gray-100 to-gray-100 hover:from-gray-100 hover:to-blue-50 font-semibold text-blue-900 text-md transition rounded-t-xl outline-none"
-                onClick={() => setOpenDate(openDate === date ? null : date)}
-              >
-                <span className="flex items-center gap-2">
-                  <svg width="20" height="20" fill="none" className="text-blue-700 mr-2" viewBox="0 0 20 20">
-                    <rect width="20" height="20" rx="5" fill="#2563eb" fillOpacity="0.1" />
-                    <path d="M6 10h8M10 6v8" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
-                  {formatDate(date)}
-                </span>
-                <span className="ml-2">
-                  {openDate === date ? (
-                    <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M6 12l4-4 4 4" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  ) : (
-                    <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M6 8l4 4 4-4" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  )}
-                </span>
-              </button>
-              {openDate === date && (
-                <div className="p-4 space-y-4 bg-white rounded-b-xl border-t border-gray-400">
+          <div className="space-y-6">
+            {sortedDates.map(date => (
+              <div key={date} className="rounded-xl border border-gray-200 bg-white shadow-md">
+                <div className="bg-blue-50 px-5 py-3 rounded-t-xl border-b border-blue-200">
+                  <h3 className="text-blue-900 text-base font-semibold tracking-wide">
+                    {formatDate(date)}
+                  </h3>
+                </div>
+                <div className="divide-y divide-gray-200">
                   {grouped[date].map((item, idx) => (
-                    <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-8 border-b border-gray-400 pb-3 last:border-b-0 hover:scale-101 cursor-pointer"
-                      onClick={() => navigate(`/worklog/${item.WORKLOG_ID}`, { state: { worklog: item } })}
+                    <div
+                      key={idx}
+                      className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 px-5 py-4 transition cursor-pointer"
+                      onClick={() =>
+                        navigate(`/worklog/${item.WORKLOG_ID}`, { state: { worklog: item } })
+                      }
                     >
                       <div className="flex-1 min-w-[120px]">
-                        <span className="block text-gray-600 text-xs mb-1">ช่วงเวลา</span>
-                        <span className="font-semibold text-blue-900">{item.TIME_START?.slice(11, 16)} - {item.TIME_END?.slice(11, 16)}</span>
+                        <span className="block text-gray-500 text-xs mb-1">ช่วงเวลา</span>
+                        <span className="font-semibold text-blue-900 text-sm">
+                          {item.TIME_START?.slice(11, 16)} - {item.TIME_END?.slice(11, 16)}
+                        </span>
                       </div>
                       <div className="flex-1 min-w-[120px]">
-                        <span className="block text-gray-600 text-xs mb-1">หมายเลขงาน</span>
-                        <span className="font-semibold text-blue-900">{item.JOB_CODE}</span>
+                        <span className="block text-gray-500 text-xs mb-1">หมายเลขงาน</span>
+                        <span className="font-semibold text-blue-900 text-sm">{item.JOB_CODE}</span>
                       </div>
-                      <div className="flex-2 min-w-[180px]">
-                        <span className="block text-gray-600 text-xs mb-1">รายละเอียดงาน</span>
-                        <span className="font-medium text-gray-800 block truncate max-w-full" title={item.TASK_DETAIL}>{item.TASK_DETAIL}</span>
+                      <div className="flex-[2] min-w-[180px]">
+                        <span className="block text-gray-500 text-xs mb-1">รายละเอียดงาน</span>
+                        <span
+                          className="font-medium text-gray-800 text-sm truncate block max-w-full"
+                          title={item.TASK_DETAIL}
+                        >
+                          {item.TASK_DETAIL}
+                        </span>
                       </div>
                       <div className="flex-1 min-w-[120px]">
-                        <span className="block text-gray-600 text-xs mb-1">สถานที่</span>
-                        <span className="font-semibold text-blue-900">{item.LOCATION_NAME}</span>
+                        <span className="block text-gray-500 text-xs mb-1">สถานที่</span>
+                        <span className="font-semibold text-blue-900 text-sm">{item.LOCATION_NAME}</span>
                       </div>
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
-          ))
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
