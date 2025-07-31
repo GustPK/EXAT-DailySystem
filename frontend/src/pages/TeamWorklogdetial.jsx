@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const WorklogDetail = () => {
+const TeamWorklogDetail = () => {
   const { worklogId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const [worklog, setWorklog] = useState(null);
   const [loading, setLoading] = useState(true);
+  const member = location.state?.member; // <--- เพิ่มตรงนี้
 
   // แปลงวันที่เป็น DD-MM-YYYY
   const formatDateToDDMMYYYY = (isoDate) => {
@@ -49,7 +50,7 @@ const WorklogDetail = () => {
       const result = await res.json();
       if (result.success) {
         toast.success('ลบงานสำเร็จ');
-        navigate('/worklog', { state: { dateList: location.state?.dateList ?? true } });
+        navigate(`/user/${member.USER_ID}`, { state: { user: member, dateList: location.state?.dateList ?? true } });
       } else {
         toast.error('ลบงานไม่สำเร็จ');
       }
@@ -66,8 +67,14 @@ const WorklogDetail = () => {
       <div className="mb-6 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
         <button
           className="px-3 h-9 bg-blue-100 hover:bg-blue-200 text-blue-900 rounded-xl"
-          onClick={() => navigate('/worklog', { state: { dateList: location.state?.dateList ?? true } })}
-
+          onClick={() => {
+            // กลับไปหน้า Userdetail โดยส่ง user object (member) กลับไปด้วย
+            if (member?.USER_ID) {
+              navigate(`/user/${member.USER_ID}`, { state: { user: member, dateList: location.state?.dateList ?? true } });
+            } else {
+              navigate(-1); // fallback ถ้าไม่มี member
+            }
+          }}
         >
           &larr; กลับ
         </button>
@@ -79,10 +86,17 @@ const WorklogDetail = () => {
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-3 w-full sm:w-auto">
           <button
             className="px-3 h-8 bg-orange-100 hover:bg-[#ffde9e] text-orange-500 rounded-xl"
-            onClick={() => navigate(`/editworklog/${worklog.WORKLOG_ID}`, { state: { worklog, dateList: location.state?.dateList ?? true } })}
+            onClick={() => navigate(`/team/editworklog/${worklog.WORKLOG_ID}`, {
+              state: {
+                worklog,
+                member,
+                dateList: location.state?.dateList ?? true
+              }
+            })}
           >
             แก้ไข
           </button>
+
           <button
             className="px-3 h-8 bg-red-100 hover:bg-red-200 text-red-600 rounded-xl"
             onClick={handleDelete}
@@ -138,4 +152,4 @@ const WorklogDetail = () => {
   );
 };
 
-export default WorklogDetail;
+export default TeamWorklogDetail;

@@ -3,13 +3,23 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const EditWorklog = () => {
+const TeamEditWorklog = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [worklog, setWorklog] = useState(null);
     const [loading, setLoading] = useState(false);
     const [locationList, setLocationList] = useState([]);
     const token = localStorage.getItem('token');
+
+    const { worklog: currentWorklog, member, dateList } = location.state || {};
+
+  useEffect(() => {
+    if (currentWorklog) {
+      setWorklog(currentWorklog);
+    } else {
+      navigate('/worklog', { state: { dateList: dateList ?? true } });
+    }
+  }, [currentWorklog, dateList, navigate]);
 
     const formatTime = (datetimeStr) => {
         if (!datetimeStr) return '';
@@ -99,7 +109,10 @@ const EditWorklog = () => {
             const result = await response.json();
             if (result.success) {
                 toast.success('แก้ไขข้อมูลสำเร็จ');
-                navigate('/worklog', { state: { dateList: location.state?.dateList ?? true } });
+                // Navigate back to UserDetail with dateList
+                navigate(`/user/${worklog.USER_ID}`, {
+                    state: { user: member, dateList: location.state?.dateList ?? true }
+                });
             } else {
                 toast.error('เกิดข้อผิดพลาด: ' + result.message);
             }
@@ -253,4 +266,4 @@ const EditWorklog = () => {
     );
 };
 
-export default EditWorklog;
+export default TeamEditWorklog;

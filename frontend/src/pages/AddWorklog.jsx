@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,6 +17,7 @@ const AddWorklog = () => {
   const [problem, setProblem] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const locationn = useLocation();
 
   const user = JSON.parse(localStorage.getItem('user'));
   const token = localStorage.getItem('token');
@@ -88,7 +89,8 @@ const AddWorklog = () => {
         setCoordinator('');
         setAction('');
         setProblem('');
-        navigate('/worklog');
+        navigate('/worklog', { state: { dateList: locationn.state?.dateList ?? true } });
+
       } else {
         toast.error('เกิดข้อผิดพลาด: ' + result.message);
       }
@@ -106,7 +108,7 @@ const AddWorklog = () => {
         <div className="mb-6 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <button
             className="px-3 h-9 bg-blue-100 hover:bg-blue-200 text-blue-900 rounded-xl"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/worklog', { state: { dateList: locationn.state?.dateList ?? true } })}
           >
             &larr; กลับ
           </button>

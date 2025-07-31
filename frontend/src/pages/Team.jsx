@@ -57,7 +57,7 @@ const Team = () => {
           team.map((member, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-xl shadow px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-8 border border-gray-200 hover:scale-101 cursor-pointer"
+              className="bg-white rounded-xl shadow px-5 py-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-8 border border-gray-200 hover:scale-101 cursor-pointer"
               onClick={() => navigate(`/user/${member.USER_ID}`, { state: { user: member } })}
             >
               <div className="flex-3 min-w-[120px]">

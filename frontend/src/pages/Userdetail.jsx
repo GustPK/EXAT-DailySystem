@@ -1,5 +1,5 @@
-import { CircleChevronRight, FileTextIcon } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { ArrowUpDown, CircleChevronRight, FileTextIcon, List, MoveDown, MoveUp, Rows3 } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -15,6 +15,17 @@ const Userdetail = () => {
   const [filterStartDate, setFilterStartDate] = useState('');
   const [filterEndDate, setFilterEndDate] = useState('');
   const [filterJobCode, setFilterJobCode] = useState('');
+  const [dateList, setDateList] = useState(true);
+
+  // รับค่า dateList จาก state ถ้ามี (เช่น กลับมาจาก TeamWorklogDetail)
+  useEffect(() => {
+    if (state?.dateList !== undefined) {
+      setDateList(state.dateList);
+    }
+  }, [state]);
+
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const updateDateList = () => setDateList(prev => !prev);
 
   useEffect(() => {
     if (state && state.user) {
@@ -77,6 +88,28 @@ const Userdetail = () => {
     return acc;
   }, {});
   const sortedDates = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
+  const flatList = Object.values(grouped).flat();
+
+  const sortedFlatList = useMemo(() => {
+      if (!sortConfig.key) return flatList;
+      const sorted = [...flatList].sort((a, b) => {
+        const aVal = a[sortConfig.key] || '';
+        const bVal = b[sortConfig.key] || '';
+        if (sortConfig.key === 'WORK_DATE') {
+          return (new Date(aVal) - new Date(bVal)) * (sortConfig.direction === 'asc' ? 1 : -1);
+        }
+        return aVal.localeCompare(bVal) * (sortConfig.direction === 'asc' ? 1 : -1);
+      });
+      return sorted;
+    }, [flatList, sortConfig]);
+
+    const requestSort = (key) => {
+    setSortConfig(prev =>
+      prev.key === key
+        ? { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' }
+        : { key, direction: 'asc' }
+    );
+  };
 
   const handleExportReport = async () => {
     try {
@@ -172,10 +205,14 @@ const Userdetail = () => {
         >
           ล้างตัวกรอง
         </button>
+
+        <button className="ml-auto w-13 h-9 bg-gray-100 hover:bg-gray-200 font-semibold rounded-xl flex items-center justify-center" onClick={updateDateList}>
+          {dateList === true ? <Rows3 className='w-4.5 h-4.5 text-blue-900' /> : <List className='w-4.5 h-4.5 text-blue-900' />}
+        </button>
         <button
-          className="ml-auto w-13 h-9 bg-blue-100 hover:bg-blue-200 text-xl text-blue-900 font-medium rounded-xl"
+          className="w-13 h-9 bg-blue-100 hover:bg-blue-200 text-xl text-blue-900 font-medium rounded-xl"
           onClick={() => {
-            navigate(`/assign/${user.USER_ID}`, { state: { userId: user.USER_ID } });
+            navigate(`/assign/${user.USER_ID}`, { state: { userId: user.USER_ID  } });
             window.scrollTo(0, 0); // Scroll to top
           }}
         >
@@ -191,9 +228,55 @@ const Userdetail = () => {
       </div>
       <div className="space-y-4">
         {loading ? (
-          <div className="text-center text-gray-500">กำลังโหลดข้อมูลงาน...</div>
+          <div className="text-center text-gray-500">กำลังโหลดข้อมูล...</div>
         ) : sortedDates.length === 0 ? (
           <div className="text-center text-gray-400">ไม่พบข้อมูลงาน</div>
+        ) : dateList === false ? (
+          <div>
+            {/* Header Row */}
+            <div className="hidden sm:flex sm:flex-row sm:items-center gap-2 sm:gap-8 border-y border-gray-300 bg-gray-100 py-5 pl-3 text-md font-semibold text-gray-700">
+              <div className="flex-1 min-w-[120px] cursor-pointer flex items-center gap-1" onClick={() => requestSort('WORK_DATE')}>
+                วันที่ {sortConfig.key === 'WORK_DATE' ? (sortConfig.direction === 'asc' ? <MoveUp className='w-4 h-4' /> : <MoveDown className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
+              </div>
+              <div className="flex-1 min-w-[120px]">ช่วงเวลา</div>
+              <div className="flex-2 min-w-[180px] cursor-pointer flex items-center gap-1" onClick={() => requestSort('TASK_DETAIL')}>
+                รายละเอียดงาน {sortConfig.key === 'TASK_DETAIL' ? (sortConfig.direction === 'asc' ? <MoveUp className='w-4 h-4' /> : <MoveDown className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
+              </div>
+              <div className="flex-1 min-w-[120px] cursor-pointer flex items-center gap-1" onClick={() => requestSort('LOCATION_NAME')}>
+                สถานที่ {sortConfig.key === 'LOCATION_NAME' ? (sortConfig.direction === 'asc' ? <MoveUp className='w- h-4' /> : <MoveDown className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
+              </div>
+              <div className="flex-1 min-w-[120px] cursor-pointer flex items-center gap-1" onClick={() => requestSort('JOB_CODE')}>
+                หมายเลขงาน {sortConfig.key === 'JOB_CODE' ? (sortConfig.direction === 'asc' ? <MoveUp className='w-4 h-4' /> : <MoveDown className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
+              </div>
+            </div>
+
+            {/* Data Rows */}
+            {sortedFlatList.map((item, idx) => (
+              <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-8 border-y border-gray-200 py-4 pl-3 last:border-b-0 cursor-pointer"
+                onClick={() => navigate(`/team/worklog/${item.WORKLOG_ID}`, { state: { worklog: item, dateList, member: user } })}>
+                <div className="flex-1 min-w-[120px]">
+                  <span className="block text-gray-600 text-xs sm:hidden mb-1">วันที่</span>
+                  <span className="font-semibold text-blue-900">{formatDate(item.WORK_DATE?.slice(0, 10))}</span>
+                </div>
+                <div className="flex-1 min-w-[120px]">
+                  <span className="block text-gray-600 text-xs sm:hidden mb-1">ช่วงเวลา</span>
+                  <span className="font-semibold text-blue-900">{item.TIME_START?.slice(11, 16)} - {item.TIME_END?.slice(11, 16)}</span>
+                </div>
+                <div className="flex-2 min-w-[180px]">
+                  <span className="block text-gray-600 text-xs sm:hidden mb-1">รายละเอียดงาน</span>
+                  <span className="font-medium text-gray-800 block truncate max-w-full" title={item.TASK_DETAIL}>{item.TASK_DETAIL}</span>
+                </div>
+                <div className="flex-1 min-w-[120px]">
+                  <span className="block text-gray-600 text-xs sm:hidden mb-1">สถานที่</span>
+                  <span className="font-medium text-blue-900">{item.LOCATION_NAME}</span>
+                </div>
+                <div className="flex-1 min-w-[120px]">
+                  <span className="block text-gray-600 text-xs sm:hidden mb-1">หมายเลขงาน</span>
+                  <span className="font-semibold text-blue-900">{item.JOB_CODE}</span>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="space-y-6">
             {sortedDates.map(date => (
@@ -205,35 +288,23 @@ const Userdetail = () => {
                 </div>
                 <div className="divide-y divide-gray-200">
                   {grouped[date].map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 px-5 py-4 transition cursor-pointer"
-                      onClick={() =>
-                        navigate(`/worklog/${item.WORKLOG_ID}`, { state: { worklog: item } })
-                      }
-                    >
+                    <div key={idx} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 px-5 py-4 transition cursor-pointer"
+                      onClick={() => navigate(`/team/worklog/${item.WORKLOG_ID}`, { state: { worklog: item, dateList, member: user } })}>
                       <div className="flex-1 min-w-[120px]">
                         <span className="block text-gray-500 text-xs mb-1">ช่วงเวลา</span>
-                        <span className="font-semibold text-blue-900 text-sm">
-                          {item.TIME_START?.slice(11, 16)} - {item.TIME_END?.slice(11, 16)}
-                        </span>
+                        <span className="font-semibold text-blue-900 text-md">{item.TIME_START?.slice(11, 16)} - {item.TIME_END?.slice(11, 16)}</span>
                       </div>
                       <div className="flex-1 min-w-[120px]">
                         <span className="block text-gray-500 text-xs mb-1">หมายเลขงาน</span>
-                        <span className="font-semibold text-blue-900 text-sm">{item.JOB_CODE}</span>
+                        <span className="font-semibold text-blue-900 text-md">{item.JOB_CODE}</span>
                       </div>
                       <div className="flex-[2] min-w-[180px]">
                         <span className="block text-gray-500 text-xs mb-1">รายละเอียดงาน</span>
-                        <span
-                          className="font-medium text-gray-800 text-sm truncate block max-w-full"
-                          title={item.TASK_DETAIL}
-                        >
-                          {item.TASK_DETAIL}
-                        </span>
+                        <span className="font-medium text-gray-800 text-md truncate block max-w-full" title={item.TASK_DETAIL}>{item.TASK_DETAIL}</span>
                       </div>
                       <div className="flex-1 min-w-[120px]">
                         <span className="block text-gray-500 text-xs mb-1">สถานที่</span>
-                        <span className="font-semibold text-blue-900 text-sm">{item.LOCATION_NAME}</span>
+                        <span className="font-semibold text-blue-900 text-md">{item.LOCATION_NAME}</span>
                       </div>
                     </div>
                   ))}
