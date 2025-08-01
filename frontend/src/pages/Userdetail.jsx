@@ -148,7 +148,7 @@ const Userdetail = () => {
     <div className="max-w-5xl mx-auto py-8 px-4">
       <button
         className="px-3 h-9 bg-blue-100 hover:bg-blue-200 text-blue-900 rounded-xl"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/team')}
       >
         &larr; กลับ
       </button>
@@ -236,17 +236,17 @@ const Userdetail = () => {
             {/* Header Row */}
             <div className="hidden sm:flex sm:flex-row sm:items-center gap-2 sm:gap-8 border-y border-gray-300 bg-gray-100 py-5 pl-3 text-md font-semibold text-gray-700">
               <div className="flex-1 min-w-[120px] cursor-pointer flex items-center gap-1" onClick={() => requestSort('WORK_DATE')}>
-                วันที่ {sortConfig.key === 'WORK_DATE' ? (sortConfig.direction === 'asc' ? <MoveUp className='w-4 h-4' /> : <MoveDown className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
+                วันที่ {sortConfig.key === 'WORK_DATE' ? (sortConfig.direction === 'asc' ? <MoveDown className='w-4 h-4' /> : <MoveUp className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
               </div>
               <div className="flex-1 min-w-[120px]">ช่วงเวลา</div>
               <div className="flex-2 min-w-[180px] cursor-pointer flex items-center gap-1" onClick={() => requestSort('TASK_DETAIL')}>
-                รายละเอียดงาน {sortConfig.key === 'TASK_DETAIL' ? (sortConfig.direction === 'asc' ? <MoveUp className='w-4 h-4' /> : <MoveDown className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
+                รายละเอียดงาน {sortConfig.key === 'TASK_DETAIL' ? (sortConfig.direction === 'asc' ? <MoveDown className='w-4 h-4' /> : <MoveUp className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
               </div>
               <div className="flex-1 min-w-[120px] cursor-pointer flex items-center gap-1" onClick={() => requestSort('LOCATION_NAME')}>
-                สถานที่ {sortConfig.key === 'LOCATION_NAME' ? (sortConfig.direction === 'asc' ? <MoveUp className='w- h-4' /> : <MoveDown className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
+                สถานที่ {sortConfig.key === 'LOCATION_NAME' ? (sortConfig.direction === 'asc' ? <MoveDown className='w- h-4' /> : <MoveUp className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
               </div>
               <div className="flex-1 min-w-[120px] cursor-pointer flex items-center gap-1" onClick={() => requestSort('JOB_CODE')}>
-                หมายเลขงาน {sortConfig.key === 'JOB_CODE' ? (sortConfig.direction === 'asc' ? <MoveUp className='w-4 h-4' /> : <MoveDown className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
+                หมายเลขงาน {sortConfig.key === 'JOB_CODE' ? (sortConfig.direction === 'asc' ? <MoveDown className='w-4 h-4' /> : <MoveUp className='w-4 h-4' />) : <ArrowUpDown className="w-4 h-4" />}
               </div>
             </div>
 

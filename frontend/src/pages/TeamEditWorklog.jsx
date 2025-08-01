@@ -13,13 +13,13 @@ const TeamEditWorklog = () => {
 
     const { worklog: currentWorklog, member, dateList } = location.state || {};
 
-  useEffect(() => {
-    if (currentWorklog) {
-      setWorklog(currentWorklog);
-    } else {
-      navigate('/worklog', { state: { dateList: dateList ?? true } });
-    }
-  }, [currentWorklog, dateList, navigate]);
+    useEffect(() => {
+        if (currentWorklog) {
+            setWorklog(currentWorklog);
+        } else {
+            navigate('/worklog', { state: { dateList: dateList ?? true } });
+        }
+    }, [currentWorklog, dateList, navigate]);
 
     const formatTime = (datetimeStr) => {
         if (!datetimeStr) return '';

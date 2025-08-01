@@ -1,11 +1,18 @@
-import React from 'react'
+import React from 'react';
 
 const Title = () => {
   return (
-    <div>
-        <h1 className="text-blue-900 text-4xl lg:text-5xl text-center font-extrabold my-10">EXAT daily System</h1>
+    <div className="bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
+      <div className="text-center mt-46">
+        <h1 className="text-blue-900 text-6xl font-extrabold mb-6">
+          EXAT Daily System
+        </h1>
+        <p className="text-gray-700 text-lg font-medium mb-4">
+          ระบบบันทึกการปฏิบัติงานรายวันสำหรับการจัดการและติดตามงานอย่างมีประสิทธิภาพ
+        </p>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Title
+export default Title;
